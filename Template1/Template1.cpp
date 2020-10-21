@@ -11,49 +11,39 @@ const float TRIANGLE_LENGTH = 100.0f;
 const float CENTER = 0.0f;
 const enum Color { red, green, blue, yellow };
 
+double angle = 0.0;
 
-void drawRed() {
+void timer(int) {
+	angle += 10.0;
+	glutPostRedisplay();
+}
+
+void draw() {
 	glBegin(GL_POLYGON);
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);//Red;
 	glVertex2f(-TRIANGLE_LENGTH, CENTER);
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);//Red;
 	glVertex2f(CENTER, CENTER);
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);//Red;
 	glVertex2f(CENTER, TRIANGLE_LENGTH);
 	glEnd();
+}
+
+void drawRed() {
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);//Red;
+	draw();
 }
 
 void drawGreen() {
-	glBegin(GL_POLYGON);
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);//Green;
-	glVertex2f(-TRIANGLE_LENGTH, CENTER);
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);//Green;
-	glVertex2f(CENTER, CENTER);
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);//Green;
-	glVertex2f(CENTER, TRIANGLE_LENGTH);
-	glEnd();
+	draw();
 }
 
 void drawBlue() {
-	glBegin(GL_POLYGON);
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);//Blue;
-	glVertex2f(-TRIANGLE_LENGTH, CENTER);
-	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);//Blue;
-	glVertex2f(CENTER, CENTER);
-	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);//Blue;
-	glVertex2f(CENTER, TRIANGLE_LENGTH);
-	glEnd();
+	draw();
 }
 
 void drawYellow() {
-	glBegin(GL_POLYGON);
 	glColor4f(240.0f, 255.0f, 0.0f, 1.0f);//Yellow;
-	glVertex2f(-TRIANGLE_LENGTH, CENTER);
-	glColor4f(240.0f, 255.0f, 0.0f, 1.0f);//Yellow;
-	glVertex2f(CENTER, CENTER);
-	glColor4f(240.0f, 255.0f, 0.0f, 1.0f);//Yellow;
-	glVertex2f(CENTER, TRIANGLE_LENGTH);
-	glEnd();
+	draw();
 }
 
 void drawTriangle(Color color) {
@@ -106,9 +96,19 @@ void MyDisplay(void) {
 	glLoadIdentity();
 	
 	drawFigure();
+	
+	//glBegin(GL_POLYGON);
+	//glColor4f(0.0f, 1.0f, 0.0f, 1.0f);//Green;
+	//glVertex2f(-TRIANGLE_LENGTH, CENTER);
+	//glVertex2f(CENTER, CENTER);
+	//glVertex2f(CENTER, TRIANGLE_LENGTH);
+	//glEnd();
 
 	// The end of scene
 	glFlush();//start processing buffered OpenGL routines
+
+	glutTimerFunc(100, timer, 0);
+
 }
 void MyInit(void) {
 	glClearColor(0.0, 0.0, 0.0, 0.0);//select clearing (background) color

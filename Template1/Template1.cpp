@@ -7,14 +7,26 @@
 #include "include\GL\GLU.H"
 #include "include\GL\glut.h"
 
+// You can change these parameters
 const double TRIANGLE_LENGTH = 50.0f;
+const double SPREAD_STEP = 0.10;
+const double SPREAD_LIMIT = 50.0;
+// ******************************* //
+
 const double OFFSET = TRIANGLE_LENGTH * 2;
+
+
 const enum Color { red, green, blue, yellow };
 
 double angle = 0.0;
+double spread = 0.0;
+bool shouldIncrease = true;
 
 void timer(int) {
-	angle += 0.10;
+	angle += 180 / SPREAD_LIMIT * SPREAD_STEP;
+	spread += shouldIncrease ? SPREAD_STEP : -SPREAD_STEP;
+	if (spread >= SPREAD_LIMIT) shouldIncrease = false;
+	if (spread <= 00.0) shouldIncrease = true;
 	glutPostRedisplay();
 }
 
@@ -62,56 +74,66 @@ void rotateAroundCenterOfMass() {
 	glTranslated(-TRIANGLE_LENGTH / 3, TRIANGLE_LENGTH / 3, 0);
 }
 
-void drawQuarter(Color color, bool shouldRotate) {
+void spreadOut() {
+	glTranslated(-spread, spread, 0);
+}
+
+void drawQuarter(Color color, bool shouldRotate, bool shouldSpreadOut) {
 	glPushMatrix();
+	if (shouldSpreadOut) spreadOut();
 	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(-OFFSET, 0, 0);
 	glPushMatrix();
+	if (shouldSpreadOut) spreadOut();
 	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(-OFFSET, 0, 0);
 	glPushMatrix();
+	if (shouldSpreadOut) spreadOut();
 	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(OFFSET, OFFSET, 0);
 	glPushMatrix();
+	if (shouldSpreadOut) spreadOut();
 	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(OFFSET, 0, 0);
 	glPushMatrix();
+	if (shouldSpreadOut) spreadOut();
 	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(0, OFFSET, 0);
 	glPushMatrix();
+	if (shouldSpreadOut) spreadOut();
 	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
 	glPopMatrix();
 }
 
-void drawFigure(bool shouldRotate) {
+void drawFigure(bool shouldRotate, bool shouldSpreadOut) {
 	glPushMatrix();
-	drawQuarter(red, shouldRotate);
+	drawQuarter(red, shouldRotate, shouldSpreadOut);
 	glPopMatrix();
 	glTranslated(OFFSET, 0, 0);
 	glRotated(180, 0, 1, 0);
 	glPushMatrix();
-	drawQuarter(green, shouldRotate);
+	drawQuarter(green, shouldRotate, shouldSpreadOut);
 	glPopMatrix();
 	glTranslated(0, -OFFSET, 0);
 	glRotated(180, 1, 0, 0);
 	glPushMatrix();
-	drawQuarter(yellow, shouldRotate);
+	drawQuarter(yellow, shouldRotate, shouldSpreadOut);
 	glPopMatrix();
 	glTranslated(OFFSET, 0, 0);
 	glRotated(180, 0, 1, 0);
 	glPushMatrix();
-	drawQuarter(blue, shouldRotate);
+	drawQuarter(blue, shouldRotate, shouldSpreadOut);
 	glPopMatrix();
 
 }
@@ -125,12 +147,12 @@ void MyDisplay(void) {
 	glLoadIdentity();
 
 
-	drawFigure(true);
+	drawFigure(true, true);
 
 	// The end of scene
 	glFlush();//start processing buffered OpenGL routines
 
-	glutTimerFunc(0.1, timer, 0);
+	glutTimerFunc(0.01, timer, 0);
 
 }
 void MyInit(void) {

@@ -7,22 +7,22 @@
 #include "include\GL\GLU.H"
 #include "include\GL\glut.h"
 
-const float TRIANGLE_LENGTH = 100.0f;
-const float CENTER = 0.0f;
+const double TRIANGLE_LENGTH = 50.0f;
+const double OFFSET = TRIANGLE_LENGTH * 2;
 const enum Color { red, green, blue, yellow };
 
 double angle = 0.0;
 
 void timer(int) {
-	angle += 10.0;
+	angle += 0.10;
 	glutPostRedisplay();
 }
 
 void draw() {
 	glBegin(GL_POLYGON);
-	glVertex2f(-TRIANGLE_LENGTH, CENTER);
-	glVertex2f(CENTER, CENTER);
-	glVertex2f(CENTER, TRIANGLE_LENGTH);
+	glVertex2f(-TRIANGLE_LENGTH, -TRIANGLE_LENGTH);
+	glVertex2f(TRIANGLE_LENGTH, -TRIANGLE_LENGTH);
+	glVertex2f(TRIANGLE_LENGTH, TRIANGLE_LENGTH);
 	glEnd();
 }
 
@@ -46,6 +46,7 @@ void drawYellow() {
 	draw();
 }
 
+
 void drawTriangle(Color color) {
 	switch (color) {
 	case red: drawRed(); break;
@@ -55,36 +56,46 @@ void drawTriangle(Color color) {
 	}
 }
 
-void drawQuarter(Color color) {
+void rotateAroundCenterOfMass() {
+	glTranslated(TRIANGLE_LENGTH / 3, -TRIANGLE_LENGTH / 3, 0);
+	glRotated(angle, 0, 0, 1);
+	glTranslated(-TRIANGLE_LENGTH / 3, TRIANGLE_LENGTH / 3, 0);
+}
+
+void drawQuarter(Color color, bool shouldRotate) {
+	glPushMatrix();
+	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
-	glTranslated(-TRIANGLE_LENGTH, 0, 0);
+	glPopMatrix();
+	glTranslated(-OFFSET, 0, 0);
+	glPushMatrix();
+	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
-	glTranslated(-TRIANGLE_LENGTH, 0, 0);
+	glPopMatrix();
+	glTranslated(-OFFSET, 0, 0);
+	glPushMatrix();
+	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
-	glTranslated(TRIANGLE_LENGTH, TRIANGLE_LENGTH, 0);
+	glPopMatrix();
+	glTranslated(OFFSET, OFFSET, 0);
+	glPushMatrix();
+	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
-	glTranslated(TRIANGLE_LENGTH, 0, 0);
+	glPopMatrix();
+	glTranslated(OFFSET, 0, 0);
+	glPushMatrix();
+	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
-	glTranslated(0, TRIANGLE_LENGTH, 0);
+	glPopMatrix();
+	glTranslated(0, OFFSET, 0);
+	glPushMatrix();
+	if (shouldRotate) rotateAroundCenterOfMass();
 	drawTriangle(color);
+	glPopMatrix();
 }
 
 void drawFigure() {
-	glPushMatrix();
-	drawQuarter(red);
-	glPopMatrix();
-	glRotated(180, 0, 1, 0);
-	glPushMatrix();
-	drawQuarter(yellow);
-	glPopMatrix();
-	glRotated(180, 1, 0, 0);
-	glPushMatrix();
-	drawQuarter(green);
-	glPopMatrix();
-	glRotated(180, 0, 1, 0);
-	glPushMatrix();
-	drawQuarter(blue);
-	glPopMatrix();
+	drawQuarter(red, true);
 }
 
 void MyDisplay(void) {
@@ -94,20 +105,14 @@ void MyDisplay(void) {
 	glShadeModel(GL_SMOOTH);
 
 	glLoadIdentity();
-	
+
+
 	drawFigure();
-	
-	//glBegin(GL_POLYGON);
-	//glColor4f(0.0f, 1.0f, 0.0f, 1.0f);//Green;
-	//glVertex2f(-TRIANGLE_LENGTH, CENTER);
-	//glVertex2f(CENTER, CENTER);
-	//glVertex2f(CENTER, TRIANGLE_LENGTH);
-	//glEnd();
 
 	// The end of scene
 	glFlush();//start processing buffered OpenGL routines
 
-	glutTimerFunc(100, timer, 0);
+	glutTimerFunc(0.1, timer, 0);
 
 }
 void MyInit(void) {

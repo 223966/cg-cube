@@ -94,8 +94,26 @@ void drawQuarter(Color color, bool shouldRotate) {
 	glPopMatrix();
 }
 
-void drawFigure() {
-	drawQuarter(red, true);
+void drawFigure(bool shouldRotate) {
+	glPushMatrix();
+	drawQuarter(red, shouldRotate);
+	glPopMatrix();
+	glTranslated(OFFSET, 0, 0);
+	glRotated(180, 0, 1, 0);
+	glPushMatrix();
+	drawQuarter(green, shouldRotate);
+	glPopMatrix();
+	glTranslated(0, -OFFSET, 0);
+	glRotated(180, 1, 0, 0);
+	glPushMatrix();
+	drawQuarter(yellow, shouldRotate);
+	glPopMatrix();
+	glTranslated(OFFSET, 0, 0);
+	glRotated(180, 0, 1, 0);
+	glPushMatrix();
+	drawQuarter(blue, shouldRotate);
+	glPopMatrix();
+
 }
 
 void MyDisplay(void) {
@@ -107,7 +125,7 @@ void MyDisplay(void) {
 	glLoadIdentity();
 
 
-	drawFigure();
+	drawFigure(true);
 
 	// The end of scene
 	glFlush();//start processing buffered OpenGL routines

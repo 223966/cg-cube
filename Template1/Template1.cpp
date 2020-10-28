@@ -8,19 +8,20 @@
 #include "include\GL\glut.h"
 
 // You can change these parameters
-const double TRIANGLE_LENGTH = 100.0f;
-const double SPREAD_STEP = 0.10;
+const double TRIANGLE_LENGTH = 80.0f;
+const double SPREAD_STEP = 1;
 const double SPREAD_LIMIT = 150.0;
 
 const bool shouldRotateAroundCenterOfMass = true;
-const bool shouldRotateAroundOrigin = false;
-const bool shouldSpread = true;
+const bool shouldRotateAroundOrigin = true;
+const bool shouldSpread = false;
 
 // ******************************* //
 
-const double OFFSET = TRIANGLE_LENGTH;
+const double OFFSET = TRIANGLE_LENGTH * 1.5;
 
 const enum Color { red, green, blue, yellow };
+const enum Direction {left, right};
 
 double angle = 0.0;
 double spread = 0.0;
@@ -72,10 +73,37 @@ void drawTriangle(Color color) {
 	}
 }
 
-void rotateAroundCenterOfMass() {
-	glTranslated(-TRIANGLE_LENGTH / 3, TRIANGLE_LENGTH / 3, 0);
-	glRotated(angle, 0, 0, 1);
-	glTranslated(TRIANGLE_LENGTH / 3, -TRIANGLE_LENGTH / 3, 0);
+void drawCenter() {
+	glPushMatrix();
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);//Green;
+	glBegin(GL_POLYGON);
+	glVertex2f(-5, -5);
+	glVertex2f(5, -5);
+	glVertex2f(5, 5);
+	glVertex2f(-5, 5);
+	glEnd();
+	glPopMatrix();
+}
+
+void rotateAroundOrigin(Direction direction) {
+	switch (direction) {
+	case left: 	glRotated(angle, 0, 0, 1); break;
+	case right: glRotated(-angle, 0, 0, 1); break;
+	}
+}
+
+void rotateAroundCenterOfMass(Direction direction) {
+	if (direction == left) {
+		glTranslated(-TRIANGLE_LENGTH / 3, TRIANGLE_LENGTH / 3, 0);
+		glRotated(angle, 0, 0, 1);
+		glTranslated(TRIANGLE_LENGTH / 3, -TRIANGLE_LENGTH / 3, 0);
+	}
+	else {
+		glTranslated(TRIANGLE_LENGTH / 3, -TRIANGLE_LENGTH / 3, 0);
+		glRotated(angle, 0, 0, 1);
+		glTranslated(-TRIANGLE_LENGTH / 3, TRIANGLE_LENGTH / 3, 0);
+	}
+	
 }
 
 void spreadOut() {
@@ -83,57 +111,90 @@ void spreadOut() {
 }
 
 void drawQuarter(Color color) {
+	drawCenter();
 	glPushMatrix();
+	if (shouldRotateAroundOrigin) rotateAroundOrigin(left);
 	if (shouldSpread) spreadOut();
-	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass();
+	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(left);
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(-OFFSET, 0, 0);
 	glPushMatrix();
+	if (shouldRotateAroundOrigin) {
+		glTranslated(OFFSET, 0, 0);
+		drawCenter();
+		rotateAroundOrigin(left);
+		glTranslated(-OFFSET, 0, 0);
+	} 
 	if (shouldSpread) spreadOut();
-	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass();
+	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(left);
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(-OFFSET, 0, 0);
 	glPushMatrix();
+	if (shouldRotateAroundOrigin) {
+		glTranslated(OFFSET*2, 0, 0);
+		drawCenter();
+		rotateAroundOrigin(left);
+		glTranslated(-OFFSET*2, 0, 0);
+	}
 	if (shouldSpread) spreadOut();
-	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass();
+	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(left);
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(OFFSET, OFFSET, 0);
 	glPushMatrix();
+	if (shouldRotateAroundOrigin) {
+		glTranslated(OFFSET, -OFFSET, 0);
+		drawCenter();
+		rotateAroundOrigin(left);
+		glTranslated(-OFFSET, OFFSET, 0);
+	}
 	if (shouldSpread) spreadOut();
-	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass();
+	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(left);
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(OFFSET, 0, 0);
 	glPushMatrix();
+	if (shouldRotateAroundOrigin) {
+		glTranslated(0, -OFFSET, 0);
+		drawCenter();
+		rotateAroundOrigin(left);
+		glTranslated(0, OFFSET, 0);
+	}
 	if (shouldSpread) spreadOut();
-	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass();
+	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(left);
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(0, OFFSET, 0);
 	glPushMatrix();
+	if (shouldRotateAroundOrigin) {
+		glTranslated(0, -OFFSET*2, 0);
+		drawCenter();
+		rotateAroundOrigin(left);
+		glTranslated(0, OFFSET*2, 0);
+	}
 	if (shouldSpread) spreadOut();
-	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass();
+	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(left);
 	drawTriangle(color);
 	glPopMatrix();
 }
 
 void drawFigure() {
 	glPushMatrix();
+	glRotated(0, 0, 0, 0);
 	drawQuarter(red);
 	glPopMatrix();
-	glRotated(180, 0, 1, 0);
 	glPushMatrix();
+	glRotated(180, 0, 0, 1);
 	drawQuarter(green);
 	glPopMatrix();
-	glRotated(180, 1, 0, 0);
 	glPushMatrix();
+	glRotated(90, 0, 0, 1);
 	drawQuarter(yellow);
 	glPopMatrix();
-	glRotated(180, 0, 1, 0);
 	glPushMatrix();
+	glRotated(-90, 0, 0, 1);
 	drawQuarter(blue);
 	glPopMatrix();
 }
@@ -152,7 +213,7 @@ void MyDisplay(void) {
 	// The end of scene
 	glFlush();//start processing buffered OpenGL routines
 
-	glutTimerFunc(0.01, timer, 0);
+	glutTimerFunc(0.1, timer, 0);
 
 }
 void MyInit(void) {

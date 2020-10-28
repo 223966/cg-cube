@@ -99,9 +99,9 @@ void rotateAroundCenterOfMass(Direction direction) {
 		glTranslated(TRIANGLE_LENGTH / 3, -TRIANGLE_LENGTH / 3, 0);
 	}
 	else {
-		glTranslated(TRIANGLE_LENGTH / 3, -TRIANGLE_LENGTH / 3, 0);
-		glRotated(angle, 0, 0, 1);
 		glTranslated(-TRIANGLE_LENGTH / 3, TRIANGLE_LENGTH / 3, 0);
+		glRotated(-angle, 0, 0, 1);
+		glTranslated(TRIANGLE_LENGTH / 3, -TRIANGLE_LENGTH / 3, 0);
 	}
 	
 }
@@ -123,11 +123,11 @@ void drawQuarter(Color color) {
 	if (shouldRotateAroundOrigin) {
 		glTranslated(OFFSET, 0, 0);
 		drawCenter();
-		rotateAroundOrigin(left);
+		rotateAroundOrigin(right);
 		glTranslated(-OFFSET, 0, 0);
 	} 
 	if (shouldSpread) spreadOut();
-	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(left);
+	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(right);
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(-OFFSET, 0, 0);
@@ -159,11 +159,11 @@ void drawQuarter(Color color) {
 	if (shouldRotateAroundOrigin) {
 		glTranslated(0, -OFFSET, 0);
 		drawCenter();
-		rotateAroundOrigin(left);
+		rotateAroundOrigin(right);
 		glTranslated(0, OFFSET, 0);
 	}
 	if (shouldSpread) spreadOut();
-	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(left);
+	if (shouldRotateAroundCenterOfMass) rotateAroundCenterOfMass(right);
 	drawTriangle(color);
 	glPopMatrix();
 	glTranslated(0, OFFSET, 0);

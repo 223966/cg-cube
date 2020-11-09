@@ -39,12 +39,12 @@ void drawQuad(const float color[3], int a, int b, int c, int d)
 }
 
 void drawCube() {
-    drawQuad(RED, 0, 3, 2, 1);
     drawQuad(GREEN, 2, 3, 7, 6);
-    drawQuad(BLUE, 0, 4, 7, 3);
-    drawQuad(BLUE, 1, 2, 6, 5);
-    drawQuad(YELLOW, 4, 5, 6, 7);
-    drawQuad(MAGENTA, 0, 1, 5, 4);
+    drawQuad(RED, 2, 6, 5, 1);
+    drawQuad(BLUE, 2, 1, 0, 3);
+    drawQuad(MAGENTA, 4, 5, 1, 0);
+    drawQuad(YELLOW, 7, 4, 0, 3);
+    drawQuad(BLUE, 7, 6, 5, 4);
 }
 
 double rotate_y = 0;
@@ -62,7 +62,31 @@ void specialKeys(int key, int x, int y)
     glutPostRedisplay();
 }
 
-void display()
+void drawCoordinates() {
+    // x red
+    glColor3f(1.0, 0.0, 0.0);
+    glBegin(GL_LINES);
+    glVertex3f(-4.0, 0.0f, 0.0f);
+    glVertex3f(4.0, 0.0f, 0.0f);
+    glEnd();
+
+    // y green
+    glColor3f(0.0, 1.0, 0.0);
+    glBegin(GL_LINES);
+    glVertex3f(0.0, -4.0f, 0.0f);
+    glVertex3f(0.0, 4.0f, 0.0f);
+    glEnd();
+
+    // z blue
+    glColor3f(0.0, 0.0, 1.0);
+    glBegin(GL_LINES);
+    glVertex3f(0.0, 0.0f, -4.0f);
+    glVertex3f(0.0, 0.0f, 4.0f);
+    glEnd();
+
+}
+
+void MyDisplay()
 {
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -82,6 +106,7 @@ void display()
 
     glRotated(rotate_x, 1.0, 0.0, 0.0);
     glRotated(rotate_y, 0.0, 1.0, 0.0);
+    //drawCoordinates();
     drawCube();
 
     glutSwapBuffers();
@@ -93,9 +118,10 @@ int main(int argc, char** argv)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("GLUT");
-    glutDisplayFunc(display);
+    glutDisplayFunc(MyDisplay);
     glutSpecialFunc(specialKeys);
     glEnable(GL_DEPTH_TEST);
     glutMainLoop();
     return 0;
 }
+
